@@ -181,8 +181,8 @@ function App() {
               className={`status-indicator ${status ? 'online' : 'offline'}`}
               title={`${service}: ${status ? 'Online' : 'Offline'}`}
             />
-          ))}
-        </div>
+        ))}
+      </div>
       </header>
 
       {/* Contenido principal */}
@@ -203,7 +203,7 @@ function App() {
           <p>Powered by Web Audio API, Ollama AI, so-VITS, Bark, and Nova Post Pilot</p>
         </div>
       </footer>
-    </div>
+      </div>
   );
 }
 
@@ -288,7 +288,7 @@ const VoiceInterface = ({ services }) => {
         {clonedAudio && (
           <div className="audio-player">
             <audio controls src={clonedAudio.audioUrl} />
-          </div>
+            </div>
         )}
       </div>
     </div>
@@ -324,7 +324,7 @@ const AnalyticsInterface = ({ services }) => {
             <p className="metric-value">{analyticsData.reach.total}</p>
             <p className="metric-change">+12%</p>
           </div>
-        </div>
+      </div>
       ) : (
         <p>Cargando datos de analytics...</p>
       )}
@@ -373,7 +373,7 @@ const SocialInterface = ({ services }) => {
           {isPublishing ? 'Publishing...' : 'Publish Post'}
         </button>
       </div>
-    </div>
+      </div>
   );
 };
 

@@ -7,16 +7,27 @@ import React, { useState, useEffect, useRef } from 'react';
 import './NexusInterface.css';
 import NexusLocations from './NexusLocations';
 import CyberpunkTerminal from './CyberpunkTerminal';
+import LoreGallery from './LoreGallery';
+import ALVAESymbol from './ALVAESymbol';
+import GhostStudio from './GhostStudio';
+import TheCreator from './TheCreator';
+import CodexViewer from './CodexViewer';
+import CommunityHub from './CommunityHub';
 
 const NexusInterface = () => {
-    const [isActive, setIsActive] = useState(false);
-    const [currentMode, setCurrentMode] = useState('music');
-    const [matrixEffect, setMatrixEffect] = useState(true);
-    const [currentLocation, setCurrentLocation] = useState('resistance_street');
-    const [showTerminal, setShowTerminal] = useState(false);
-    const [cyberpunkMode, setCyberpunkMode] = useState(true);
-    const [easterEggs, setEasterEggs] = useState([]);
+    const [nexusState, setNexusState] = useState('lobby'); // 'lobby', 'opened', 'immersed'
+    const [selectedSection, setSelectedSection] = useState(null);
+    const [circleExpanded, setCircleExpanded] = useState(false);
+    const [showPetals, setShowPetals] = useState(false);
+    const [glitchTexts, setGlitchTexts] = useState(['ALVAE', 'Resistencia', 'Son1kVers3']);
     const [immersiveLevel, setImmersiveLevel] = useState(1);
+    const [userAvatar, setUserAvatar] = useState({
+        symbols: [],
+        colors: ['#00FFE7'],
+        vibration: 'neutral'
+    });
+    const [showMap, setShowMap] = useState(false);
+    const [showCodex, setShowCodex] = useState(false);
     
     const canvasRef = useRef(null);
     const audioContextRef = useRef(null);
@@ -225,6 +236,11 @@ const NexusInterface = () => {
                 message: '⚡ Cyberpunk Mode: MAXIMUM OVERDRIVE',
                 effect: 'neon-glow',
                 duration: 8000
+            },
+            alvae: {
+                message: '👁️ ALVAE SYMBOL ACTIVATED - All-Seeing Eye Engaged',
+                effect: 'alvae-vision',
+                duration: 12000
             }
         };
         
@@ -256,6 +272,10 @@ const NexusInterface = () => {
             case 'neon-glow':
                 body.style.filter = 'brightness(1.2) contrast(1.1)';
                 body.style.boxShadow = 'inset 0 0 100px #00ffff';
+                break;
+            case 'alvae-vision':
+                body.style.filter = 'hue-rotate(45deg) saturate(1.5) brightness(1.1)';
+                body.style.boxShadow = 'inset 0 0 150px rgba(0, 255, 231, 0.3)';
                 break;
         }
     };
@@ -301,195 +321,441 @@ const NexusInterface = () => {
         }
     };
 
+    // Secciones del Nexus (pétalos del círculo)
+    const nexusSections = [
+        {
+            id: 'ghost_studio',
+            name: 'GHOST STUDIO',
+            icon: '👻',
+            color: '#00FFE7',
+            description: 'Herramienta central de análisis y transformación',
+            position: { angle: 0, radius: 150 }
+        },
+        {
+            id: 'clone_station', 
+            name: 'CLONE STATION',
+            icon: '🎤',
+            color: '#ff6b6b',
+            description: 'Clonación de voz con so-VITS y Bark',
+            position: { angle: 72, radius: 150 }
+        },
+        {
+            id: 'codex',
+            name: 'CODEX',
+            icon: '📚',
+            color: '#8b5cf6',
+            description: 'Historia del universo Son1kVers3',
+            position: { angle: 144, radius: 150 }
+        },
+        {
+            id: 'la_liga',
+            name: 'LA LIGA',
+            icon: '⚔️',
+            color: '#FFC107',
+            description: 'Comunidad de la Divina Liga del No Silencio',
+            position: { angle: 216, radius: 150 }
+        },
+        {
+            id: 'the_creator',
+            name: 'THE CREATOR',
+            icon: '🎵',
+            color: '#10b981',
+            description: 'Generación musical text-audio',
+            position: { angle: 288, radius: 150 }
+        }
+    ];
+
+    // Manejar click en el círculo central
+    const handleCircleClick = () => {
+        if (nexusState === 'lobby') {
+            setNexusState('opened');
+            setCircleExpanded(true);
+            setTimeout(() => {
+                setShowPetals(true);
+                playActivationSound();
+            }, 500);
+        }
+    };
+
+    // Manejar selección de sección
+    const handleSectionSelect = (section) => {
+        setSelectedSection(section);
+        setNexusState('immersed');
+        
+        // Actualizar avatar del usuario
+        updateUserAvatar(section);
+        
+        // Efecto de transición
+        createTransitionEffect(section.color);
+    };
+
+    // Actualizar avatar del usuario basado en interacciones
+    const updateUserAvatar = (section) => {
+        setUserAvatar(prev => ({
+            symbols: [...new Set([...prev.symbols, section.icon])],
+            colors: [...new Set([...prev.colors, section.color])],
+            vibration: section.id.includes('ghost') ? 'haunted' : 
+                      section.id.includes('clone') ? 'vocal' :
+                      section.id.includes('codex') ? 'wise' :
+                      section.id.includes('liga') ? 'warrior' : 'creative'
+        }));
+    };
+
+    // Crear efecto de transición
+    const createTransitionEffect = (color) => {
+        const transition = document.createElement('div');
+        transition.className = 'nexus-section-transition';
+        transition.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: ${color};
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: nexus-expand 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+        `;
+        
+        document.body.appendChild(transition);
+        
+        setTimeout(() => {
+            document.body.removeChild(transition);
+        }, 1000);
+    };
+
+    // Renderizar lobby (pantalla inicial)
+    const renderLobby = () => (
+        <div className="nexus-lobby">
+            {/* Textos glitch flotantes */}
+            <div className="glitch-texts">
+                {glitchTexts.map((text, index) => (
+                    <div
+                        key={text}
+                        className="glitch-text"
+                        style={{
+                            left: `${20 + Math.random() * 60}%`,
+                            top: `${20 + Math.random() * 60}%`,
+                            animationDelay: `${index * 0.5}s`
+                        }}
+                    >
+                        {text}
+                    </div>
+                ))}
+            </div>
+
+            {/* Círculo central luminoso */}
+            <div className="nexus-central-circle" onClick={handleCircleClick}>
+                <div className={`circle-core ${circleExpanded ? 'expanded' : ''}`}>
+                    <div className="circle-inner">
+                        <div className="circle-pulse"></div>
+                        <div className="circle-text">NEXUS</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Instrucción para el usuario */}
+            {!circleExpanded && (
+                <div className="nexus-instruction">
+                    <p>Toca el círculo para abrir el portal</p>
+                    <div className="instruction-arrow">↑</div>
+                </div>
+            )}
+        </div>
+    );
+
+    // Renderizar pétalos (secciones)
+    const renderPetals = () => (
+        <div className="nexus-petals">
+            {nexusSections.map((section, index) => {
+                const angle = section.position.angle;
+                const radius = section.position.radius;
+                const x = Math.cos((angle - 90) * Math.PI / 180) * radius;
+                const y = Math.sin((angle - 90) * Math.PI / 180) * radius;
+                
+                return (
+                    <div
+                        key={section.id}
+                        className="nexus-petal"
+                        style={{
+                            transform: `translate(${x}px, ${y}px)`,
+                            animationDelay: `${index * 0.1}s`,
+                            borderColor: section.color
+                        }}
+                        onClick={() => handleSectionSelect(section)}
+                    >
+                        <div className="petal-icon" style={{ color: section.color }}>
+                            {section.icon}
+                        </div>
+                        <div className="petal-name" style={{ color: section.color }}>
+                            {section.name}
+                        </div>
+                        <div className="petal-description">
+                            {section.description}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
+    // Renderizar mapa inmersivo
+    const renderImmersiveMap = () => (
+        <div className="immersive-map">
+            <div className="map-header">
+                <h2>🌌 Mapa del Universo Son1kVers3</h2>
+                <button 
+                    className="map-close"
+                    onClick={() => setShowMap(false)}
+                >
+                    ✕
+                </button>
+            </div>
+            
+            <div className="map-galaxy">
+                {/* Nodos de locaciones */}
+                {[
+                    { name: 'La Terminal', x: 20, y: 30, color: '#00FFE7' },
+                    { name: 'Ghost Studio', x: 70, y: 20, color: '#ff6b6b' },
+                    { name: 'El Archivo', x: 80, y: 70, color: '#8b5cf6' },
+                    { name: 'Dead Zone', x: 30, y: 80, color: '#FFC107' },
+                    { name: 'Estudio Fantasma', x: 50, y: 50, color: '#10b981' }
+                ].map((location, index) => (
+                    <div
+                        key={location.name}
+                        className="map-node"
+                        style={{
+                            left: `${location.x}%`,
+                            top: `${location.y}%`,
+                            borderColor: location.color,
+                            animationDelay: `${index * 0.2}s`
+                        }}
+                        onClick={() => {
+                            setShowMap(false);
+                            // Navegar a la locación
+                        }}
+                    >
+                        <div className="node-pulse" style={{ borderColor: location.color }}></div>
+                        <div className="node-label" style={{ color: location.color }}>
+                            {location.name}
+                        </div>
+                    </div>
+                ))}
+                
+                {/* Conexiones entre nodos */}
+                <svg className="map-connections">
+                    <defs>
+                        <linearGradient id="connectionGradient">
+                            <stop offset="0%" stopColor="#00FFE7" stopOpacity="0.6" />
+                            <stop offset="100%" stopColor="#ff6b6b" stopOpacity="0.6" />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        d="M 20% 30% Q 50% 10% 70% 20%"
+                        stroke="url(#connectionGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        className="connection-line"
+                    />
+                    <path
+                        d="M 70% 20% Q 90% 50% 80% 70%"
+                        stroke="url(#connectionGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        className="connection-line"
+                    />
+                    <path
+                        d="M 80% 70% Q 50% 90% 30% 80%"
+                        stroke="url(#connectionGradient)"
+                        strokeWidth="2"
+                        fill="none"
+                        className="connection-line"
+                    />
+                </svg>
+            </div>
+        </div>
+    );
+
+    // Renderizar avatar del usuario
+    const renderUserAvatar = () => (
+        <div className="user-avatar-totem">
+            <div className="avatar-core" style={{ borderColor: userAvatar.colors[0] }}>
+                <div className="avatar-symbols">
+                    {userAvatar.symbols.slice(0, 3).map((symbol, index) => (
+                        <span
+                            key={index}
+                            className="avatar-symbol"
+                            style={{
+                                color: userAvatar.colors[index % userAvatar.colors.length],
+                                animationDelay: `${index * 0.3}s`
+                            }}
+                        >
+                            {symbol}
+                        </span>
+                    ))}
+                </div>
+                <div className="avatar-vibration">
+                    <div className={`vibration-wave ${userAvatar.vibration}`}></div>
+                </div>
+            </div>
+            <div className="avatar-level">
+                Nivel {immersiveLevel}
+            </div>
+        </div>
+    );
+
     return (
-        <div className={`nexus-interface ${isActive ? 'active' : ''} level-${immersiveLevel}`}>
-            {/* Canvas para efectos Matrix */}
+        <div className={`nexus-interface-immersive ${nexusState} level-${immersiveLevel}`}>
+            {/* Canvas para efectos de fondo */}
             <canvas
                 ref={canvasRef}
-                className="nexus-matrix-canvas"
+                className="nexus-background-canvas"
                 style={{
                     position: 'fixed',
                     top: 0,
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    zIndex: -1,
-                    opacity: matrixEffect ? 0.1 : 0
+                    zIndex: -1
                 }}
             />
-            
-            {/* Efectos de partículas cyberpunk */}
-            {cyberpunkMode && (
-                <div className="cyberpunk-particles">
-                    {[...Array(50)].map((_, i) => (
-                        <div
-                            key={i}
-                            className="cyberpunk-particle"
-                            style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
-                                animationDelay: `${Math.random() * 2}s`,
-                                animationDuration: `${2 + Math.random() * 3}s`
-                            }}
-                        />
-                    ))}
+
+            {/* Partículas de fondo */}
+            <div className="nexus-particles">
+                {[...Array(100)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="nexus-particle"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 3}s`,
+                            animationDuration: `${3 + Math.random() * 4}s`
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Header minimalista */}
+            <header className="nexus-minimal-header">
+                <div className="header-left">
+                    <span className="nexus-title">NEXUS</span>
+                    <span className="nexus-subtitle">Portal del Códex</span>
+                </div>
+                
+                <div className="header-controls">
+                    <button 
+                        className="control-btn"
+                        onClick={() => setShowMap(!showMap)}
+                        title="Mapa Inmersivo"
+                    >
+                        🌌
+                    </button>
+                    <button 
+                        className="control-btn"
+                        onClick={() => setImmersiveLevel(prev => prev < 5 ? prev + 1 : 1)}
+                        title="Nivel de Inmersión"
+                    >
+                        🚀
+                    </button>
+                </div>
+            </header>
+
+            {/* Contenido principal según estado */}
+            <main className="nexus-main">
+                {nexusState === 'lobby' && renderLobby()}
+                
+                {nexusState === 'opened' && (
+                    <div className="nexus-opened">
+                        <div className="nexus-central-area">
+                            <div className="expanded-circle">
+                                <ALVAESymbol 
+                                    size="large"
+                                    interactive={true}
+                                    glowing={true}
+                                />
+                            </div>
+                            {showPetals && renderPetals()}
+                        </div>
+                        
+                        <div className="nexus-instructions">
+                            <p>Selecciona una sección para sumergirte en el universo</p>
+                        </div>
+                    </div>
+                )}
+                
+                {nexusState === 'immersed' && selectedSection && (
+                    <div className="nexus-immersed">
+                        <div className="immersed-header">
+                            <button 
+                                className="back-btn"
+                                onClick={() => setNexusState('opened')}
+                            >
+                                ← Volver al Portal
+                            </button>
+                            <h2 style={{ color: selectedSection.color }}>
+                                {selectedSection.icon} {selectedSection.name}
+                            </h2>
+                        </div>
+                        
+                        <div className="immersed-content">
+                            {/* Renderizar herramienta según sección seleccionada */}
+                            {selectedSection.id === 'ghost_studio' && (
+                                <GhostStudio services={{}} />
+                            )}
+                            {selectedSection.id === 'clone_station' && (
+                                <div className="clone-station-wrapper">
+                                    <h3>🎤 Clone Station</h3>
+                                    <p>Clonación de voz con so-VITS y Bark</p>
+                                    {/* Aquí iría el componente de clonación */}
+                                </div>
+                            )}
+                            {selectedSection.id === 'codex' && (
+                                <CodexViewer />
+                            )}
+                            {selectedSection.id === 'la_liga' && (
+                                <CommunityHub />
+                            )}
+                            {selectedSection.id === 'the_creator' && (
+                                <TheCreator services={{}} />
+                            )}
+                        </div>
+                    </div>
+                )}
+            </main>
+
+            {/* Avatar del usuario */}
+            {nexusState !== 'lobby' && (
+                <div className="user-avatar-container">
+                    {renderUserAvatar()}
                 </div>
             )}
-            
-            {/* Interfaz principal */}
-            <div className="nexus-main-interface">
-                {/* Header con controles */}
-                <header className="nexus-header">
-                    <div className="nexus-logo">
-                        <h1>NEXUS</h1>
-                        <span className="nexus-version">v2.0</span>
-                    </div>
-                    
-                    <div className="nexus-controls">
-                        <button
-                            className={`nexus-control-btn ${matrixEffect ? 'active' : ''}`}
-                            onClick={toggleMatrixEffect}
-                            title="Toggle Matrix Effect"
-                        >
-                            🔮
-                        </button>
-                        
-                        <button
-                            className={`nexus-control-btn ${cyberpunkMode ? 'active' : ''}`}
-                            onClick={toggleCyberpunkMode}
-                            title="Toggle Cyberpunk Mode"
-                        >
-                            ⚡
-                        </button>
-                        
-                        <button
-                            className="nexus-control-btn"
-                            onClick={increaseImmersiveLevel}
-                            title="Increase Immersive Level"
-                        >
-                            🚀
-                        </button>
-                        
-                        <button
-                            className="nexus-control-btn"
-                            onClick={() => setShowTerminal(true)}
-                            title="Open Terminal"
-                        >
-                            💻
-                        </button>
-                    </div>
-                </header>
-                
-                {/* Navegación de modos */}
-                <nav className="nexus-mode-nav">
-                    {['music', 'voice', 'analytics', 'social', 'ghost'].map(mode => (
-                        <button
-                            key={mode}
-                            className={`nexus-mode-btn ${currentMode === mode ? 'active' : ''}`}
-                            onClick={() => switchMode(mode)}
-                        >
-                            {mode.toUpperCase()}
-                        </button>
-                    ))}
-                </nav>
-                
-                {/* Contenido principal */}
-                <main className="nexus-main-content">
-                    {/* Nexus Locations */}
-                    <NexusLocations 
-                        currentLocation={currentLocation}
-                        onLocationChange={setCurrentLocation}
-                    />
 
-                    {/* Cyberpunk Terminal */}
-                    <CyberpunkTerminal 
-                        isVisible={showTerminal}
-                        onClose={() => setShowTerminal(false)}
-                    />
+            {/* Mapa inmersivo */}
+            {showMap && renderImmersiveMap()}
 
-                    {currentMode === 'music' && (
-                        <div className="nexus-music-interface">
-                            <h2>🎵 Music Generation Nexus</h2>
-                            <div className="nexus-music-controls">
-                                <button className="nexus-btn primary">Generate Track</button>
-                                <button className="nexus-btn secondary">Load Sample</button>
-                                <button className="nexus-btn accent">Export Audio</button>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {currentMode === 'voice' && (
-                        <div className="nexus-voice-interface">
-                            <h2>🎤 Voice Cloning Nexus</h2>
-                            <div className="nexus-voice-controls">
-                                <button className="nexus-btn primary">Clone Voice</button>
-                                <button className="nexus-btn secondary">Upload Sample</button>
-                                <button className="nexus-btn accent">Generate Speech</button>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {currentMode === 'analytics' && (
-                        <div className="nexus-analytics-interface">
-                            <h2>📊 Analytics Nexus</h2>
-                            <div className="nexus-analytics-controls">
-                                <button className="nexus-btn primary">View Metrics</button>
-                                <button className="nexus-btn secondary">Export Data</button>
-                                <button className="nexus-btn accent">Real-time Monitor</button>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {currentMode === 'social' && (
-                        <div className="nexus-social-interface">
-                            <h2>🚀 Social Media Nexus</h2>
-                            <div className="nexus-social-controls">
-                                <button className="nexus-btn primary">Create Post</button>
-                                <button className="nexus-btn secondary">Schedule Content</button>
-                                <button className="nexus-btn accent">Analyze Trends</button>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {currentMode === 'ghost' && (
-                        <div className="nexus-ghost-interface">
-                            <h2>👻 Ghost Studio Nexus</h2>
-                            <div className="nexus-ghost-controls">
-                                <button className="nexus-btn primary">Analyze Audio</button>
-                                <button className="nexus-btn secondary">Ghost Mode</button>
-                                <button className="nexus-btn accent">Stealth Mode</button>
-                            </div>
-                        </div>
-                    )}
-                </main>
-                
-                {/* Footer con información del sistema */}
-                <footer className="nexus-footer">
-                    <div className="nexus-system-info">
-                        <span>Immersive Level: {immersiveLevel}/5</span>
-                        <span>Matrix: {matrixEffect ? 'ON' : 'OFF'}</span>
-                        <span>Cyberpunk: {cyberpunkMode ? 'ON' : 'OFF'}</span>
-                    </div>
-                    
-                    <div className="nexus-easter-eggs">
-                        {easterEggs.map((egg, index) => (
-                            <div key={index} className="nexus-easter-egg">
-                                {egg.message}
-                            </div>
-                        ))}
-                    </div>
-                </footer>
-            </div>
-            
-            {/* Botón de activación principal */}
-            {!isActive && (
-                <button
-                    className="nexus-activation-btn"
-                    onClick={activateNexus}
-                >
-                    ACTIVATE NEXUS
-                </button>
-            )}
+            {/* Footer minimalista */}
+            <footer className="nexus-minimal-footer">
+                <span>Son1kVers3 • Nexus Portal • "Lo imperfecto también es sagrado"</span>
+            </footer>
+
+            {/* Estilos dinámicos para animaciones */}
+            <style jsx>{`
+                @keyframes nexus-expand {
+                    0% {
+                        width: 10px;
+                        height: 10px;
+                        opacity: 1;
+                    }
+                    100% {
+                        width: 100vw;
+                        height: 100vh;
+                        opacity: 0.8;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

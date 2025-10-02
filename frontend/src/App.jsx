@@ -19,6 +19,9 @@ import DAWEditor from './components/DAWEditor';
 import FloatingPlayer from './components/FloatingPlayer';
 import CommunityHub from './components/CommunityHub';
 import ResistanceMessage from './components/ResistanceMessage';
+import GhostStudio from './components/GhostStudio';
+import TheCreator from './components/TheCreator';
+import CodexViewer from './components/CodexViewer';
 
 function App() {
   const [currentView, setCurrentView] = useState('nexus');
@@ -109,7 +112,7 @@ function App() {
           }}
         />;
       case 'music':
-        return <MusicInterface services={services} />;
+        return <TheCreator services={services} />;
       case 'voice':
         return <VoiceInterface services={services} />;
       case 'analytics':
@@ -117,9 +120,11 @@ function App() {
       case 'social':
         return <SocialInterface services={services} />;
       case 'ghost':
-        return <GhostInterface services={services} />;
+        return <GhostStudio services={services} />;
       case 'community':
         return <CommunityHub />;
+      case 'codex':
+        return <CodexViewer />;
       case 'nexus':
         return <NexusInterface />;
       default:
@@ -155,12 +160,13 @@ function App() {
           {[
             { id: 'nexus', label: 'Nexus', icon: '🎮' },
             { id: 'daw', label: 'DAW Editor', icon: '🎛️' },
-            { id: 'music', label: 'Music', icon: '🎵' },
+            { id: 'music', label: 'The Creator', icon: '🎵' },
             { id: 'voice', label: 'Voice', icon: '🎤' },
             { id: 'analytics', label: 'Analytics', icon: '📊' },
             { id: 'social', label: 'Social', icon: '🚀' },
-            { id: 'ghost', label: 'Ghost', icon: '👻' },
-            { id: 'community', label: 'Santuario', icon: '⚔️' }
+            { id: 'ghost', label: 'Ghost Studio', icon: '👻' },
+            { id: 'community', label: 'Santuario', icon: '⚔️' },
+            { id: 'codex', label: 'Codex', icon: '📚' }
           ].map(item => (
             <button
               key={item.id}

@@ -1,0 +1,497 @@
+/**
+ * 📚 Codex Viewer - Estilos CSS
+ * Visor del Lore Completo de Son1kVers3
+ */
+
+.codex-viewer {
+  min-height: 100vh;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(0, 255, 231, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 30%, #16213e 70%, #0a0a0a 100%);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  padding: 40px 20px;
+}
+
+.codex-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 40px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid rgba(0, 255, 231, 0.3);
+  border-radius: 25px;
+  backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.codex-header::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, #00FFE7, #ff6b6b, #8b5cf6, #00FFE7);
+  background-size: 400% 400%;
+  border-radius: 28px;
+  z-index: -1;
+  animation: codex-border-glow 4s ease infinite;
+}
+
+@keyframes codex-border-glow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.codex-header h1 {
+  font-size: 3.5rem;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00FFE7, #ff6b6b, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 15px 0;
+  font-family: 'Orbitron', monospace;
+}
+
+.codex-header p {
+  font-size: 1.3rem;
+  color: #cccccc;
+  margin: 0 0 25px 0;
+}
+
+.codex-seal {
+  margin-top: 20px;
+}
+
+.codex-seal .seal {
+  font-size: 2rem;
+  color: #00FFE7;
+  text-shadow: 0 0 20px rgba(0, 255, 231, 0.6);
+}
+
+.codex-seal p {
+  font-style: italic;
+  color: #00FFE7;
+  margin: 10px 0 0 0;
+  font-weight: 600;
+}
+
+/* Navegación de capítulos */
+.codex-navigation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 50px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chapter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(0, 255, 231, 0.2);
+  border-radius: 15px;
+  padding: 20px 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.chapter-btn:hover {
+  border-color: rgba(0, 255, 231, 0.5);
+  background: rgba(0, 255, 231, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 255, 231, 0.2);
+}
+
+.chapter-btn.active {
+  border-color: #00FFE7;
+  background: rgba(0, 255, 231, 0.15);
+  box-shadow: 0 0 25px rgba(0, 255, 231, 0.4);
+}
+
+.chapter-number {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #00FFE7;
+  font-family: 'Orbitron', monospace;
+}
+
+.chapter-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chapter-timeline {
+  font-size: 0.8rem;
+  color: #888888;
+  font-family: 'Courier New', monospace;
+}
+
+/* Contenido del capítulo */
+.codex-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 231, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  backdrop-filter: blur(15px);
+}
+
+.chapter-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid rgba(0, 255, 231, 0.3);
+}
+
+.chapter-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00FFE7;
+  margin: 0 0 15px 0;
+  text-shadow: 0 0 20px rgba(0, 255, 231, 0.5);
+}
+
+.timeline-marker {
+  background: rgba(0, 255, 231, 0.2);
+  color: #00FFE7;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  border: 1px solid rgba(0, 255, 231, 0.4);
+}
+
+.chapter-body {
+  line-height: 1.8;
+}
+
+.chapter-section h3 {
+  color: #00FFE7;
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+  font-weight: 600;
+}
+
+.chapter-description {
+  color: #cccccc;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  line-height: 1.7;
+}
+
+.philosophy-box {
+  background: rgba(0, 255, 231, 0.05);
+  border: 1px solid rgba(0, 255, 231, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 25px 0;
+}
+
+.philosophy-box h4 {
+  color: #00FFE7;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.philosophy-box p {
+  color: #ffffff;
+  margin: 0;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.quote-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #00FFE7;
+  padding: 25px;
+  margin: 30px 0;
+  border-radius: 0 12px 12px 0;
+}
+
+.quote-box blockquote {
+  color: #00FFE7;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.6;
+  text-shadow: 0 0 10px rgba(0, 255, 231, 0.3);
+}
+
+.manifesto-box {
+  background: rgba(255, 107, 107, 0.1);
+  border: 2px solid rgba(255, 107, 107, 0.3);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 30px 0;
+}
+
+.manifesto-box h4 {
+  color: #ff6b6b;
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.manifesto-content {
+  color: #ffffff;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  text-align: center;
+  font-weight: 500;
+}
+
+.character-box {
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 25px 0;
+}
+
+.character-box h4 {
+  color: #8b5cf6;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.character-box p {
+  margin: 12px 0;
+  color: #cccccc;
+  line-height: 1.5;
+}
+
+.character-box strong {
+  color: #ffffff;
+  text-transform: capitalize;
+}
+
+.locations-box {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 25px 0;
+}
+
+.locations-box h4 {
+  color: #FFC107;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.locations-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.locations-box li {
+  color: #cccccc;
+  margin: 10px 0;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.locations-box li::before {
+  content: '🏛️';
+  position: absolute;
+  left: 0;
+  color: #FFC107;
+}
+
+/* Sección clasificada */
+.classified-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.classified-btn {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+}
+
+.classified-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+}
+
+.classified-btn.active {
+  background: linear-gradient(45deg, #e74c3c, #c0392b);
+}
+
+.classified-content {
+  max-width: 800px;
+  margin: 30px auto 0;
+  animation: classified-reveal 0.5s ease-out;
+}
+
+@keyframes classified-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.classified-header {
+  background: rgba(255, 107, 107, 0.2);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  border-radius: 15px 15px 0 0;
+  padding: 20px;
+}
+
+.classified-header h3 {
+  color: #ff6b6b;
+  margin: 0;
+  font-size: 1.3rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.classified-body {
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+  border-top: none;
+  border-radius: 0 0 15px 15px;
+  padding: 30px;
+}
+
+.danger-box,
+.revelation-box {
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.danger-box h4,
+.revelation-box h4 {
+  color: #ff6b6b;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.danger-box p,
+.revelation-box p {
+  color: #cccccc;
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.danger-box strong,
+.revelation-box strong {
+  color: #ffffff;
+}
+
+.danger-box em {
+  color: #ff6b6b;
+  font-style: italic;
+}
+
+/* Footer del Codex */
+.codex-footer {
+  text-align: center;
+  margin-top: 60px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border-top: 2px solid rgba(0, 255, 231, 0.3);
+  border-radius: 15px 15px 0 0;
+}
+
+.codex-footer p {
+  color: #888888;
+  margin: 8px 0;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+}
+
+.codex-footer .seal {
+  color: #00FFE7;
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(0, 255, 231, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .codex-navigation {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .codex-viewer {
+    padding: 20px 15px;
+  }
+  
+  .codex-header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .codex-navigation {
+    grid-template-columns: 1fr;
+  }
+  
+  .codex-content {
+    padding: 25px;
+  }
+  
+  .chapter-header h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .codex-header {
+    padding: 25px;
+  }
+  
+  .codex-header h1 {
+    font-size: 2rem;
+  }
+  
+  .codex-header p {
+    font-size: 1rem;
+  }
+  
+  .chapter-btn {
+    padding: 15px 10px;
+  }
+  
+  .chapter-number {
+    font-size: 1.2rem;
+  }
+  
+  .chapter-title {
+    font-size: 0.8rem;
+  }
+}

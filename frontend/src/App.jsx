@@ -19,6 +19,10 @@ import DAWEditor from './components/DAWEditor';
 import FloatingPlayer from './components/FloatingPlayer';
 import CommunityHub from './components/CommunityHub';
 import ResistanceMessage from './components/ResistanceMessage';
+import CloneStation from './components/CloneStation';
+import GhostStudio from './components/GhostStudio';
+import NovaPostPilot from './components/NovaPostPilot';
+import TheCreator from './components/TheCreator';
 
 function App() {
   const [currentView, setCurrentView] = useState('nexus');
@@ -109,19 +113,17 @@ function App() {
           }}
         />;
       case 'music':
-        return <MusicInterface services={services} />;
+        return <TheCreator />;
       case 'voice':
-        return <VoiceInterface services={services} />;
+        return <CloneStation />;
       case 'analytics':
         return <AnalyticsInterface services={services} />;
       case 'social':
-        return <SocialInterface services={services} />;
+        return <NovaPostPilot />;
       case 'ghost':
-        return <GhostInterface services={services} />;
+        return <GhostStudio />;
       case 'community':
         return <CommunityHub />;
-      case 'nexus':
-        return <NexusInterface />;
       default:
         return <NexusInterface />;
     }
@@ -155,11 +157,11 @@ function App() {
           {[
             { id: 'nexus', label: 'Nexus', icon: '🎮' },
             { id: 'daw', label: 'DAW Editor', icon: '🎛️' },
-            { id: 'music', label: 'Music', icon: '🎵' },
-            { id: 'voice', label: 'Voice', icon: '🎤' },
+            { id: 'music', label: 'The Creator', icon: '🎵' },
+            { id: 'voice', label: 'Clone Station', icon: '🎤' },
             { id: 'analytics', label: 'Analytics', icon: '📊' },
-            { id: 'social', label: 'Social', icon: '🚀' },
-            { id: 'ghost', label: 'Ghost', icon: '👻' },
+            { id: 'social', label: 'NOP', icon: '🚀' },
+            { id: 'ghost', label: 'Ghost Studio', icon: '👻' },
             { id: 'community', label: 'Santuario', icon: '⚔️' }
           ].map(item => (
             <button
